@@ -66,13 +66,14 @@ func (h *handlerFilm) GetFilm(w http.ResponseWriter, r *http.Request) {
 func (h *handlerFilm) CreateFilm(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	// Get data user Token
-	dataContext := r.Context().Value(string("dataFile"))
-	filename := dataContext.(string)
+	// Get dataFile from midleware and store to filename variable here ...
+	dataContex := r.Context().Value("dataFile")
+	filename := dataContex.(string)
 
+	// year, _ := strconv.Atoi(r.FormValue("year"))
 	category_id, _ := strconv.Atoi(r.FormValue("category_id"))
 
-	request := filmsdto.CreateFilmRequest{
+	request := filmsdto.FilmRequest{
 		Title:       r.FormValue("title"),
 		ThumbNail:   filename,
 		Year:        r.FormValue("year"),
@@ -80,21 +81,12 @@ func (h *handlerFilm) CreateFilm(w http.ResponseWriter, r *http.Request) {
 		Description: r.FormValue("description"),
 	}
 
-	// request := new(filmsdto.FilmRequest)
-	// if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-	// 	w.WriteHeader(http.StatusBadRequest)
-	// 	response := dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
-	// 	json.NewEncoder(w).Encode(response)
-	// 	return
-	// }
-
 	validation := validator.New()
 	err := validation.Struct(request)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		response := dto.ErrorResult{Code: http.StatusInternalServerError, Message: err.Error()}
 		json.NewEncoder(w).Encode(response)
-
 		return
 	}
 
@@ -103,9 +95,11 @@ func (h *handlerFilm) CreateFilm(w http.ResponseWriter, r *http.Request) {
 		ThumbNail:   filename,
 		Year:        request.Year,
 		CategoryID:  category_id,
+		Category:    models.CategoryResponse{},
 		Description: request.Description,
 	}
 
+	// err := mysql.DB.Create(&film).Error
 	film, err = h.FilmRepository.CreateFilm(film)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -119,8 +113,66 @@ func (h *handlerFilm) CreateFilm(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	response := dto.SuccessResult{Code: http.StatusOK, Data: film}
 	json.NewEncoder(w).Encode(response)
-
 }
+
+// func (h *handlerFilm) CreateFilm(w http.ResponseWriter, r *http.Request) {
+// 	w.Header().Set("Content-Type", "application/json")
+
+// 	// Get data user Token
+// 	dataContext := r.Context().Value(string("dataFile"))
+// 	filename := dataContext.(string)
+
+// 	category_id, _ := strconv.Atoi(r.FormValue("category_id"))
+
+// 	request := filmsdto.CreateFilmRequest{
+// 		Title:       r.FormValue("title"),
+// 		ThumbNail:   filename,
+// 		Year:        r.FormValue("year"),
+// 		CategoryID:  category_id,
+// 		Description: r.FormValue("description"),
+// 	}
+
+// 	// request := new(filmsdto.FilmRequest)
+// 	// if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+// 	// 	w.WriteHeader(http.StatusBadRequest)
+// 	// 	response := dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
+// 	// 	json.NewEncoder(w).Encode(response)
+// 	// 	return
+// 	// }
+
+// 	validation := validator.New()
+// 	err := validation.Struct(request)
+// 	if err != nil {
+// 		w.WriteHeader(http.StatusInternalServerError)
+// 		response := dto.ErrorResult{Code: http.StatusInternalServerError, Message: err.Error()}
+// 		json.NewEncoder(w).Encode(response)
+
+// 		return
+// 	}
+
+// 	film := models.Film{
+// 		Title:       request.Title,
+// 		ThumbNail:   filename,
+// 		Year:        request.Year,
+// 		CategoryID:  category_id,
+// 		Description: request.Description,
+// 	}
+
+// 	film, err = h.FilmRepository.CreateFilm(film)
+// 	if err != nil {
+// 		w.WriteHeader(http.StatusInternalServerError)
+// 		response := dto.ErrorResult{Code: http.StatusInternalServerError, Message: err.Error()}
+// 		json.NewEncoder(w).Encode(response)
+// 		return
+// 	}
+
+// 	film, _ = h.FilmRepository.GetFilm(film.ID)
+
+// 	w.WriteHeader(http.StatusOK)
+// 	response := dto.SuccessResult{Code: http.StatusOK, Data: film}
+// 	json.NewEncoder(w).Encode(response)
+
+// }
 
 func (h *handlerFilm) UpdateFilm(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")

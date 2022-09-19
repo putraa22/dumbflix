@@ -8,12 +8,13 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"strings"
 )
 
 func UploadFile(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		file, _, err := r.FormFile("image")
+		file, _, err := r.FormFile("thumbnail")
 
 		if err != nil && r.Method == "PATCH" {
 			ctx := context.WithValue(r.Context(), "dataFile", "false")
@@ -55,7 +56,7 @@ func UploadFile(next http.HandlerFunc) http.HandlerFunc {
 		}
 
 		// setup max-upload
-		const MAX_UPLOAD_SIZE = 10 << 20 //max-size upload
+		const MAX_UPLOAD_SIZE = 100 << 20 //max-size upload
 		r.ParseMultipartForm(MAX_UPLOAD_SIZE)
 		if r.ContentLength > MAX_UPLOAD_SIZE {
 			w.WriteHeader(http.StatusBadRequest)
@@ -66,7 +67,8 @@ func UploadFile(next http.HandlerFunc) http.HandlerFunc {
 
 		// Create a temporary file within our temp-images directory that follows
 		// a particular naming pattern
-		tempFile, err := ioutil.TempFile("uploads", filetype)
+		fileTypeSplit := strings.Split(filetype, "/")
+		tempFile, err := ioutil.TempFile("uploads", fileTypeSplit[0]+"-*."+fileTypeSplit[1])
 		if err != nil {
 			fmt.Println(err)
 			fmt.Println("path upload error")

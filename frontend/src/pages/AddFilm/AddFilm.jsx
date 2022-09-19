@@ -15,7 +15,7 @@ function AddFilm() {
     title: "",
     thumbnail: "",
     year: "",
-    categoryId: "",
+    category_id: "",
     description: "",
   }); //Store product data
 
@@ -48,6 +48,7 @@ function AddFilm() {
 
   // Handle change data on form
   const handleChange = (e) => {
+    console.log("punya si", e.target.name);
     setForm({
       ...form,
       [e.target.name]: e.target.type === "file" ? e.target.files : e.target.value,
@@ -60,7 +61,7 @@ function AddFilm() {
 
       //Configuration
       const config = {
-        Headers: {
+        headers: {
           "Content-Type": "multipart/form-data",
         },
       };
@@ -70,7 +71,7 @@ function AddFilm() {
       formData.set("title", form.title);
       formData.set("thumbnail", form.thumbnail[0], form.thumbnail[0].name);
       formData.set("year", form.year);
-      formData.set("category_id", form.categoryId);
+      formData.set("category_id", form.category_id);
       formData.set("description", form.description);
 
       console.log(form);
@@ -96,10 +97,10 @@ function AddFilm() {
         <Form style={{ marginTop: "30px" }} onSubmit={(e) => handleSubmit.mutate(e)}>
           <Row>
             <Col xs={10}>
-              <Form.Control placeholder="Title" id="title" name="title" style={{ backgroundColor: "gray", color: "white" }} onChange={handleChange} />
+              <Form.Control placeholder="Title" name="title" style={{ backgroundColor: "gray", color: "white" }} onChange={handleChange} />
             </Col>
             <Col>
-              <Form.Group controlId="formFile" className="mb-3">
+              <Form.Group className="mb-3">
                 <Form.Label style={{ backgroundColor: "gray", padding: "5px", borderRadius: "5px", color: "white" }} htmlFor="thumbnail1">
                   Attach Thumbnail
                   <AttachFile />
@@ -109,7 +110,7 @@ function AddFilm() {
             </Col>
           </Row>
           <Form.Control placeholder="Year" name="year" style={{ backgroundColor: "gray", color: "white" }} onChange={handleChange} />
-          <Form.Select aria-label="Default select example" style={{ marginTop: "18px", backgroundColor: "gray", color: "white" }} onChange={handleChange}>
+          <Form.Select name="category_id" style={{ marginTop: "18px", backgroundColor: "gray", color: "white" }} onChange={handleChange}>
             <option>Category</option>
             {categories.map((item) => (
               <>
@@ -120,6 +121,7 @@ function AddFilm() {
           <FloatingLabel controlId="floatingTextarea2" label="Description" style={{ marginTop: "18px" }}>
             <Form.Control as="textarea" name="description" placeholder="Description" style={{ height: "100px", backgroundColor: "gray", color: "white" }} onChange={handleChange} />
           </FloatingLabel>
+
           {/* <Row style={{marginTop: '50px'}}>
                 <Col xs={10}>
                   <Form.Control placeholder="Title Episode" style={{backgroundColor: 'gray', color: 'white'}}/>

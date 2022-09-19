@@ -1,23 +1,20 @@
 import React, { useContext } from "react";
 import "./Profile.scss";
 import { images } from "../../contstans";
-import {UserContext} from '../../context/userContext'
-import {useQuery} from 'react-query'
-import {API} from '../../config//api'
-
+import { UserContext } from "../../context/userContext";
 const Profile = () => {
-  const [state] = useContext(UserContext)
+  const [state] = useContext(UserContext);
 
- console.log(state);
+  console.log(state);
 
   return (
     <div className="app__profile">
       <div className="app__profile-wrapper">
-          {/* {user?.map((item, index) => (
+        {/* {user?.map((item, index) => (
             <> */}
         <div className="app__profile-left">
           <h1 className="Profile__title">Personal Info</h1>
-          
+
           <div className="profile">
             <img src={images.user} alt="user-img" />
             <p className="p-text">
@@ -60,7 +57,6 @@ const Profile = () => {
               <span>Address</span>
             </p>
           </div>
-         
         </div>
         <div className="app__profile-right">
           <img src={images.avatar2} alt="avatar" />
