@@ -1,0 +1,98 @@
+.app__featured {
+  height: 80vh;
+  position: relative;
+
+  .category {
+    position: absolute;
+    top: 80px;
+    left: 60px;
+    font-size: 30px;
+    font-weight: 500;
+    font-family: var(--font-base);
+    color: var(--color-white);
+    display: flex;
+    align-items: center;
+
+    select {
+      cursor: pointer;
+      background-color: var(--color-black);
+      color: var(--color-white);
+      margin-left: 20px;
+      padding: 5px;
+      border-radius: 5px;
+    }
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .app__featured-info {
+    width: 35%;
+    position: absolute;
+    left: 150px;
+    top: 150px;
+    display: flex;
+    flex-direction: column;
+
+    .app__desc {
+      margin-top: 20px;
+      margin-bottom: 0;
+    }
+
+    .app__year-category {
+      display: flex;
+
+      .text-year {
+        margin-right: 2rem;
+        width: 95px;
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .category-text {
+        border: 1px solid #fff;
+        width: 95px;
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 5px;
+      }
+    }
+
+    .app__buttons {
+      display: flex;
+
+      button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: var(--font-base);
+        font-weight: 400;
+        font-size: 24px;
+        margin-top: 1rem;
+        margin-right: 1rem;
+        cursor: pointer;
+
+        &.app__play {
+          background-color: var(--color-red);
+          color: var(--color-white);
+        }
+        &.app__more {
+          background-color: var(--color-gray);
+          color: var(--color-white);
+        }
+        span {
+          margin-left: 5px;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+@import "~bootstrap/scss/bootstrap";
+
+body {
+  background-color: var(--color-main);
+}
+
+.App{
+  background-color: var(--color-main);
+}
+
+// .home {
+//   background-color: var(--color-main);
+// }
+
+.head-text {
+  font-family: var(--font-base);
+  line-height: 16.98px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.year_banner-text {
+  font-family: var(--font-base);
+  color: var(--color-white);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  font-size: 14px;
+}
+
+.p-text {
+  font-family: var(--font-base);
+  color: var(--color-white);
+  font-weight: 300;
+  font-size: 18px;
+}

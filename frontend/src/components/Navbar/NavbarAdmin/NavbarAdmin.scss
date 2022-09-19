@@ -1,0 +1,139 @@
+.app__navbar-admin {
+  width: 100%;
+  color: var(--color-white);
+  top: 0;
+  position: fixed;
+  z-index: 999;
+
+  .app__navbar-admin_container {
+    padding: 0 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 70px;
+
+    .app__navbar-admin-left {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      cursor: pointer;
+
+      img {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+      }
+    }
+  }
+}
+
+.app__navbar-admin-right {
+  display: flex;
+  align-items: center;
+
+  img {
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #fff;
+  }
+
+  .icon {
+    margin: 0 15px;
+    cursor: pointer;
+  }
+
+  .app__navbar-admin-dropdown {
+    margin-right: 3rem;
+    .dropdown__options {
+      display: none;
+      background-color: var(--color-main);
+      border-radius: 10px;
+
+      button {
+        border: none;
+      }
+    }
+
+    a {
+      //   padding: 10px;
+
+      text-decoration: none;
+      cursor: pointer;
+
+      .icon_links {
+        margin-right: 10px;
+      }
+    }
+
+    &:hover {
+      .dropdown__options {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+
+        button {
+          border: none;
+          background-color: var(--color-main);
+          color: var(--color-white);
+          font-family: var(--font-base);
+          align-items: center;
+          font-weight: 500;
+          padding: 10px;
+          border-radius: 10px;
+
+          .icon_links {
+            margin-right: 10px;
+          }
+        }
+
+        a {
+          display: flex;
+          text-decoration: none;
+          padding: 10px;
+          cursor: pointer;
+          align-items: center;
+          font-weight: 500;
+          font-family: var(--font-base);
+          color: var(--color-white);
+
+          .icon__links {
+            margin-right: 10px;
+          }
+        }
+        div {
+          width: 100%;
+          height: 2px;
+          background: var(--color-gray);
+        }
+      }
+    }
+  }
+}
+
+.app__navbar-admin-button {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  .login {
+    padding: 5px 2rem;
+    background-color: var(--color-white);
+    color: var(--color-red);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 14px;
+    border-radius: 5px;
+    margin-right: 1rem;
+  }
+  .register {
+    padding: 5px 2rem;
+    background-color: var(--color-red);
+    color: var(--color-white);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 14px;
+    border-radius: 5px;
+  }
+}

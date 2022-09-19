@@ -1,0 +1,90 @@
+.app__movies-page {
+  height: 80vh;
+  position: relative;
+
+  img {
+    width: 100%;
+    height: 100%;
+    left: 0;
+    right: 0;
+    top: 0;
+    object-fit: cover;
+  }
+
+  .app__movies-page_info {
+    width: 35%;
+    position: absolute;
+    left: 150px;
+    top: 130px;
+    display: flex;
+    flex-direction: column;
+
+    img {
+      width: 168px;
+      height: 77px;
+    }
+
+    .app__movies-page_desc {
+      margin-top: 30px;
+      font-weight: 400;
+      font-size: 14px;
+      text-align: justify;
+      line-height: 27.04px;
+    }
+
+    .app__movies-page-category {
+      display: flex;
+
+      .year_movies-text {
+        margin-right: 2rem;
+        padding: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .year_movies-text-category {
+        padding: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid #fff;
+        border-radius: 5px;
+      }
+    }
+
+    .app__movies-page-button {
+      display: flex;
+
+      button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: var(--font-base);
+        font-weight: 400;
+        font-size: 24px;
+        margin-top: 1rem;
+        margin-right: 1rem;
+        cursor: pointer;
+
+        &.app__movies-play {
+          background-color: var(--color-red);
+          color: var(--color-white);
+
+          span {
+            margin-left: 5px;
+          }
+        }
+      }
+    }
+  }
+}
+
+div {
+  .wrapper {
+    overflow: hidden;
+  }
+}
