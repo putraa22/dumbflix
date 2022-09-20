@@ -1,22 +1,24 @@
 package models
 
+import "time"
+
 type Transaction struct {
 	ID        int          `json:"id" gorm:"primary_key:auto_increment"`
-	StartDate string       `json:"startDate"`
-	DueDate   string       `json:"dueDate"`
+	StartDate time.Time    `json:"startDate"`
+	DueDate   time.Time    `json:"dueDate"`
 	UserID    int          `json:"user_id"`
 	User      UserResponse `json:"user"`
-	Attache   string       `json:"attache"`
+	Price     int          `json:"price"`
 	Status    string       `json:"status"`
 }
 
 type TransactionResponse struct {
 	ID        int          `json:"id"`
-	StartDate string       `json:"startDate"`
-	DueDate   string       `json:"dueDate"`
+	StartDate time.Time    `json:"startDate"`
+	DueDate   time.Time    `json:"dueDate"`
 	User      UserResponse `json:"user"`
 	UserID    int          `json:"user_id"`
-	Attache   string       `json:"attache"`
+	Price     int          `json:"price"`
 	Status    string       `json:"status"`
 }
 

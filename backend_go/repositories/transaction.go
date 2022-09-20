@@ -8,10 +8,13 @@ import (
 
 type TransactionRepository interface {
 	FindTransactions() ([]models.Transaction, error)
-	FindTransactionsByUserId(UserID int) ([]models.Transaction, error)
+	// FindTransactionsByUserId(UserID int) ([]models.Transaction, error)
+
 	GetTransaction(ID int) (models.Transaction, error)
+	GetOneTransaction(ID string) (models.Transaction, error)
 	CreateTransaction(transactions models.Transaction) (models.Transaction, error)
-	UpdateTransaction(transaction models.Transaction) (models.Transaction, error)
+	// UpdateTransaction(transaction models.Transaction) (models.Transaction, error)
+	UpdateTransaction(status string, ID string) error
 	DeleteTransaction(transactoin models.Transaction) (models.Transaction, error)
 
 	// Declare UpdateTransaction repository method ...
@@ -29,12 +32,12 @@ func (r *repository) FindTransactions() ([]models.Transaction, error) {
 	return transactions, err
 }
 
-func (r *repository) FindTransactionsByUserId(UserID int) ([]models.Transaction, error) {
-	var transactions []models.Transaction 
-	err := r.db.Preload("User").Find(&transactions).First(&transactions, "user_id=?", UserID).Error
+// func (r *repository) FindTransactionsByUserId(UserID int) ([]models.Transaction, error) {
+// 	var transactions []models.Transaction
+// 	err := r.db.Preload("User").Find(&transactions).First(&transactions, "user_id=?", UserID).Error
 
-	return transactions, err
-}
+// 	return transactions, err
+// }
 
 func (r *repository) GetTransaction(ID int) (models.Transaction, error) {
 	var transactions models.Transaction
@@ -44,12 +47,12 @@ func (r *repository) GetTransaction(ID int) (models.Transaction, error) {
 }
 
 // Create GetOneTransaction method ...
-// func (r *repository) GetOneTransaction(ID string) (models.Transaction, error) {
-// 	var transaction models.Transaction
-// 	err := r.db.First(&transaction).Error
+func (r *repository) GetOneTransaction(ID string) (models.Transaction, error) {
+	var transaction models.Transaction
+	err := r.db.Preload("User").First(&transaction, "id=?", ID).Error
 
-// 	return transaction, err
-// }
+	return transaction, err
+}
 
 func (r *repository) CreateTransaction(transactions models.Transaction) (models.Transaction, error) {
 	err := r.db.Preload("User").Create(&transactions).Error
@@ -58,11 +61,22 @@ func (r *repository) CreateTransaction(transactions models.Transaction) (models.
 }
 
 // Create UpdateTransaction method ...
-func (r *repository) UpdateTransaction(transaction models.Transaction) (models.Transaction, error) {
+func (r *repository) UpdateTransaction(status string, ID string) error {
+	var transaction models.Transaction
+	r.db.Preload("User").First(&transaction, ID)
 
-	err := r.db.Preload("User").Save(&transaction).Error
+	if status != transaction.Status && status == "success" {
+		var user models.User
+		r.db.First(&user, transaction.User.ID)
+		user.Status = true
+		r.db.Save(&user)
+	}
 
-	return transaction, err
+	transaction.Status = status
+	err := r.db.Save(&transaction).Error
+
+	return err
+
 }
 
 func (r *repository) DeleteTransaction(transactoin models.Transaction) (models.Transaction, error) {

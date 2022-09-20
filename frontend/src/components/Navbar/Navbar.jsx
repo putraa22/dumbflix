@@ -59,8 +59,6 @@
 //   }
 //   const handleCloseRegister = () => setRegisterShow(false)
 
-
-
 //   return (
 //     <>
 //       <nav className={isScrolled ? "app__navbar scrolled" : "app__navbar"}>
@@ -123,18 +121,17 @@
 
 // export default Navbar;
 
-
 /* eslint-disable */
-import {  useState, useContext } from "react";
+import { useState, useContext } from "react";
 import { Button, Dropdown, Form, Image, InputGroup, Nav, Navbar } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineTransaction } from "react-icons/ai";
-import { API } from '../../config/api';
-import {images} from '../../contstans'; 
-import { UserContext } from '../../context/userContext';
-import { generateFromString } from 'generate-avatar';
-
+import { API } from "../../config/api";
+import { images } from "../../contstans";
+import { UserContext } from "../../context/userContext";
+import { generateFromString } from "generate-avatar";
+import { Person, Payment, Logout, Movie } from "@mui/icons-material";
 
 function NavbarComponent() {
   const [showRegister, setShowRegister] = useState(false);
@@ -145,9 +142,9 @@ function NavbarComponent() {
   const handleCloseLogin = () => setShowLogin(false);
   const handleShowLogin = () => setShowLogin(true);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const [state, dispatch] = useContext(UserContext)
+  const [state, dispatch] = useContext(UserContext);
   const [dataLogin, setDataLogin] = useState({
     email: "",
     password: "",
@@ -155,8 +152,8 @@ function NavbarComponent() {
 
   function handleLogout() {
     return dispatch({
-      type: "LOGOUT"
-    })
+      type: "LOGOUT",
+    });
   }
 
   const [dataRegister, setDataRegister] = useState({
@@ -177,34 +174,36 @@ function NavbarComponent() {
 
   function handleLogout() {
     dispatch({
-      type: "LOGOUT_SUCCESS"
-    })
-    Success({ message: "Logout berhasil!" })
+      type: "LOGOUT_SUCCESS",
+    });
+    Success({ message: "Logout berhasil!" });
   }
 
-async function handleSubmitLogin() {
-  try{
-    const body = {
-      email: dataLogin.email,
-      password: dataLogin.password,
+  async function handleSubmitLogin() {
+    try {
+      const body = {
+        email: dataLogin.email,
+        password: dataLogin.password,
+      };
+
+      await API.post("/login", body, { validateStatus: () => true })
+        .then((response) => {
+          if (response.data.code === 400) {
+            return Error({ message: "Email / Password yang anda masukkan salah!" });
+          }
+          dispatch({
+            type: "LOGIN_SUCCESS",
+            payload: response.data.data,
+          });
+          console.log(state);
+        })
+        .catch((err) => {
+          Error({ message: `${err.response.data.message}` });
+        });
+    } catch (err) {
+      console.log(err);
     }
-
-    await API.post('/login', body, {validateStatus: () => true}).then(response => {
-      if (response.data.code === 400) {
-        return Error({ message: 'Email / Password yang anda masukkan salah!' })
-      }
-      dispatch({
-        type: "LOGIN_SUCCESS",
-        payload: response.data.data
-      })
-      console.log(state);
-    }).catch(err => {
-      Error({message : `${err.response.data.message}`})
-    })
-  } catch (err) {
-    console.log(err);
   }
-}
 
   function handleChangeRegister(e) {
     setDataRegister({
@@ -221,55 +220,56 @@ async function handleSubmitLogin() {
         password: dataRegister.password,
         gender: dataRegister.gender,
         phone: dataRegister.phone,
-        address: dataRegister.address
-      }
+        address: dataRegister.address,
+      };
 
-      await API.post('/register', body, { validateStatus: () => true }).then(response => {
-        console.log(response)
-        if (response.data.code >= 400) {
-          return Error({ message: `Mohon isikan form registrasi yang valid!` })
-        }
-        handleCloseRegister()
-        handleShowLogin()
-        Success({ message: `Register berhasil! Silahkan Login` })
-      }).catch(err => {
-        Error({ message: `${err.response.data.message}` })
-      })
+      await API.post("/register", body, { validateStatus: () => true })
+        .then((response) => {
+          console.log(response);
+          if (response.data.code >= 400) {
+            return Error({ message: `Mohon isikan form registrasi yang valid!` });
+          }
+          handleCloseRegister();
+          handleShowLogin();
+          Success({ message: `Register berhasil! Silahkan Login` });
+        })
+        .catch((err) => {
+          Error({ message: `${err.response.data.message}` });
+        });
     } catch (err) {
-      Error({ message: `${err}` })
+      Error({ message: `${err}` });
     }
   }
 
   return (
     <>
-      <Navbar style={{ backgroundColor: "#1F1F1F", }} expand="lg" className="fixed-top">
+      <Navbar style={{ backgroundColor: "#1F1F1F" }} expand="lg" className="fixed-top">
         <div className="mx-5 w-100">
           <Navbar.Toggle aria-controls="basic-navbar-nav" style={{ borderColor: "white", backgroundColor: "white" }} />
-          
-            <div className="position-absolute" style={!state.isAdmin ? { top: "15px", left: "45%" } : { top: "15px", left: "5%" }}>
-              <img src={images.logo}  alt />
-            </div>
-          
-           
-            {/* <div className="position-absolute" style={state.isAdmin ? { top: "15px", left: "45%" } : { top: "15px", left: "45%" }}>
+
+          <div className="position-absolute" style={!state.isAdmin ? { top: "15px", left: "45%" } : { top: "15px", left: "5%" }}>
+            <img src={images.logo} alt />
+          </div>
+
+          {/* <div className="position-absolute" style={state.isAdmin ? { top: "15px", left: "45%" } : { top: "15px", left: "45%" }}>
               <img src={images.logo} />
             </div> */}
-          
+
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="w-100">
-              {!state.isAdmin && (<>
-                <Link className="text-white fw-bold d-flex justify-content-start text-decoration-none d-flex align-items-center pt-2 pb-2" style={{ width: "100px" }} to={'/'} id="RouterNavLink">
-                  Home
-                </Link>
-                <Link className="text-white fw-bold d-flex justify-content-start text-decoration-none d-flex align-items-center pt-2 pb-2" style={{ width: "130px" }} to={'/tv-show'} id="RouterNavLink">
-                  TV Shows
-                </Link>
-                <Link className="text-white fw-bold d-flex justify-content-start text-decoration-none d-flex align-items-center pt-2 pb-2" style={{ width: "130px" }} to={'/movies'} id="RouterNavLink">
-                  Movies
-                </Link>
-              </>
-              )
-              }
+              {!state.isAdmin && (
+                <>
+                  <Link className="text-white fw-bold d-flex justify-content-start text-decoration-none d-flex align-items-center pt-2 pb-2" style={{ width: "100px" }} to={"/"} id="RouterNavLink">
+                    Home
+                  </Link>
+                  <Link className="text-white fw-bold d-flex justify-content-start text-decoration-none d-flex align-items-center pt-2 pb-2" style={{ width: "130px" }} to={"/tv-show"} id="RouterNavLink">
+                    TV Shows
+                  </Link>
+                  <Link className="text-white fw-bold d-flex justify-content-start text-decoration-none d-flex align-items-center pt-2 pb-2" style={{ width: "130px" }} to={"/movies"} id="RouterNavLink">
+                    Movies
+                  </Link>
+                </>
+              )}
               <div className="d-flex w-100 justify-content-end">
                 {!state.isLogin ? (
                   <>
@@ -280,7 +280,7 @@ async function handleSubmitLogin() {
                         fontWeight: "bold",
                         width: "100px",
                         marginRight: "20px",
-                        border: "none"
+                        border: "none",
                       }}
                       onClick={handleShowRegister}
                     >
@@ -292,7 +292,7 @@ async function handleSubmitLogin() {
                         color: "white",
                         fontWeight: "bold",
                         width: "100px",
-                        border: "none"
+                        border: "none",
                       }}
                       onClick={handleShowLogin}
                     >
@@ -307,47 +307,34 @@ async function handleSubmitLogin() {
                       </Dropdown.Toggle>
 
                       <Dropdown.Menu style={{ backgroundColor: "#1F1F1F", marginTop: "35px" }} className="dropdown-menu-end">
-                        <div style={{ width: "0", height: "0", borderLeft: "15px solid transparent", borderRight: "15px solid transparent", borderBottom: "15px solid #1F1F1F", position: "absolute", right: "10px", top: "-15px" }}>
-                        </div>
-                        {state.isAdmin ?
-                          (<>
+                        <div style={{ width: "0", height: "0", borderLeft: "15px solid transparent", borderRight: "15px solid transparent", borderBottom: "15px solid #1F1F1F", position: "absolute", right: "10px", top: "-15px" }}></div>
+                        {state.isAdmin ? (
+                          <>
                             <Dropdown.Item style={{ color: "white" }} className="d-flex align-items-center" onClick={() => navigate("/list-film")}>
-                              <Image src='/assets/icon/film-dd.svg' style={{ objectFit: "cover", width: "20px", height: "20px", }} />
-                              <b className="ms-2">
-                                Film
-                              </b>
+                              <Movie style={{ objectFit: "cover", width: "20px", height: "20px", color: "red" }} />
+                              <b className="ms-2">Film</b>
                             </Dropdown.Item>
                             <Dropdown.Item style={{ color: "white" }} className="d-flex align-items-center mt-2" onClick={() => navigate("/list-transaction")}>
                               <AiOutlineTransaction style={{ objectFit: "cover", width: "20px", height: "20px", color: "#E50914" }} />
-                              <b className="ms-2">
-                                Transaction
-                              </b>
+                              <b className="ms-2">Transaction</b>
                             </Dropdown.Item>
                           </>
-                          ) :
-                          (
-                            <>
-                              <Dropdown.Item style={{ color: "white" }} className="d-flex align-items-center" onClick={() => navigate("/profile")}>
-                                <Image src='/assets/icon/profile-dd.svg' style={{ objectFit: "cover", width: "20px", height: "20px", }} />
-                                <b className="ms-2">
-                                  Profile
-                                </b>
-                              </Dropdown.Item>
-                              <Dropdown.Item style={{ color: "white" }} className="d-flex align-items-center mt-2" onClick={() => navigate("/pay")}>
-                                <Image src='/assets/icon/pay-dd.svg' style={{ objectFit: "cover", width: "20px", height: "20px", }} />
-                                <b className="ms-2">
-                                  Pay
-                                </b>
-                              </Dropdown.Item>
-                            </>
-                          )
-                        }
+                        ) : (
+                          <>
+                            <Dropdown.Item style={{ color: "white" }} className="d-flex align-items-center" onClick={() => navigate("/profile")}>
+                              <Person style={{ objectFit: "cover", width: "20px", height: "20px", color: "red" }} />
+                              <b className="ms-2">Profile</b>
+                            </Dropdown.Item>
+                            <Dropdown.Item style={{ color: "white" }} className="d-flex align-items-center mt-2" onClick={() => navigate("/pay")}>
+                              <Payment style={{ objectFit: "cover", width: "20px", height: "20px", color: "red" }} />
+                              <b className="ms-2">Pay</b>
+                            </Dropdown.Item>
+                          </>
+                        )}
                         <hr style={{ color: "white" }} />
                         <Dropdown.Item style={{ color: "white" }} className="d-flex align-items-center" onClick={handleLogout}>
-                          <Image src='/assets/icon/logout-dd.svg' style={{ objectFit: "cover", width: "20px", height: "20px", }} />
-                          <b className="ms-2">
-                            Logout
-                          </b>
+                          <Logout style={{ objectFit: "cover", width: "20px", height: "20px", color: "red" }} />
+                          <b className="ms-2">Logout</b>
                         </Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
@@ -373,7 +360,7 @@ async function handleSubmitLogin() {
           <h2>
             <b>Login</b>
           </h2>
-          <Form className="mt-4" >
+          <Form className="mt-4">
             <InputGroup className="mb-3 mt-3">
               <Form.Control
                 placeholder="Email"
@@ -578,8 +565,7 @@ async function handleSubmitLogin() {
           </Form>
         </Modal.Body>
       </Modal>
-      <div style={{ marginBottom: "50px" }}>
-      </div>
+      <div style={{ marginBottom: "50px" }}></div>
     </>
   );
 }

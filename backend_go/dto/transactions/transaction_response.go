@@ -1,10 +1,12 @@
 package transactionsdto
 
+import "time"
+
 type TransactionResponse struct {
-	ID        int    `json:"id"`
-	StartDate string `json:"startDate"`
-	DueDate   string `json:"dueDate"`
-	UserID    int    `json:"user_id" form:"user_id"`
-	Attache   string `json:"attache"`
-	Status    string `json:"status"`
+	ID        int       `json:"id"`
+	StartDate time.Time `json:"startDate"`
+	DueDate   time.Time `json:"dueDate"`
+	UserID    int       `json:"user_id" form:"user_id"`
+	Price     int       `json:"price"`
+	Status    string    `json:"status"`
 }
