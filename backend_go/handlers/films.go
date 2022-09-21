@@ -18,6 +18,8 @@ type handlerFilm struct {
 	FilmRepository repositories.FilmRepository
 }
 
+var path_file = os.Getenv("PATH_FILE")
+
 func HandlerFilm(FilmRepository repositories.FilmRepository) *handlerFilm {
 	return &handlerFilm{FilmRepository}
 }
@@ -31,9 +33,9 @@ func (h *handlerFilm) FindFilms(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(err.Error())
 	}
 
-	for i, f := range films {
-		imagePath := os.Getenv("PATH_FILE") + f.ThumbNail
-		films[i].ThumbNail = imagePath
+	// Untuk mengembed path file di property thumbnailfilm
+	for i, p := range films {
+		films[i].ThumbNail = os.Getenv("PATH_FILE") + p.ThumbNail
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -56,6 +58,7 @@ func (h *handlerFilm) GetFilm(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// path untuk membuat api file image
 	film.ThumbNail = os.Getenv("PATH_FILE") + film.ThumbNail
 
 	w.WriteHeader(http.StatusOK)
@@ -67,13 +70,13 @@ func (h *handlerFilm) CreateFilm(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	// Get dataFile from midleware and store to filename variable here ...
-	dataContex := r.Context().Value("dataFile")
+	dataContex := r.Context().Value("image")
 	filename := dataContex.(string)
 
 	// year, _ := strconv.Atoi(r.FormValue("year"))
 	category_id, _ := strconv.Atoi(r.FormValue("category_id"))
 
-	request := filmsdto.FilmRequest{
+	request := filmsdto.CreateFilmRequest{
 		Title:       r.FormValue("title"),
 		ThumbNail:   filename,
 		Year:        r.FormValue("year"),
@@ -115,65 +118,6 @@ func (h *handlerFilm) CreateFilm(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
-// func (h *handlerFilm) CreateFilm(w http.ResponseWriter, r *http.Request) {
-// 	w.Header().Set("Content-Type", "application/json")
-
-// 	// Get data user Token
-// 	dataContext := r.Context().Value(string("dataFile"))
-// 	filename := dataContext.(string)
-
-// 	category_id, _ := strconv.Atoi(r.FormValue("category_id"))
-
-// 	request := filmsdto.CreateFilmRequest{
-// 		Title:       r.FormValue("title"),
-// 		ThumbNail:   filename,
-// 		Year:        r.FormValue("year"),
-// 		CategoryID:  category_id,
-// 		Description: r.FormValue("description"),
-// 	}
-
-// 	// request := new(filmsdto.FilmRequest)
-// 	// if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-// 	// 	w.WriteHeader(http.StatusBadRequest)
-// 	// 	response := dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
-// 	// 	json.NewEncoder(w).Encode(response)
-// 	// 	return
-// 	// }
-
-// 	validation := validator.New()
-// 	err := validation.Struct(request)
-// 	if err != nil {
-// 		w.WriteHeader(http.StatusInternalServerError)
-// 		response := dto.ErrorResult{Code: http.StatusInternalServerError, Message: err.Error()}
-// 		json.NewEncoder(w).Encode(response)
-
-// 		return
-// 	}
-
-// 	film := models.Film{
-// 		Title:       request.Title,
-// 		ThumbNail:   filename,
-// 		Year:        request.Year,
-// 		CategoryID:  category_id,
-// 		Description: request.Description,
-// 	}
-
-// 	film, err = h.FilmRepository.CreateFilm(film)
-// 	if err != nil {
-// 		w.WriteHeader(http.StatusInternalServerError)
-// 		response := dto.ErrorResult{Code: http.StatusInternalServerError, Message: err.Error()}
-// 		json.NewEncoder(w).Encode(response)
-// 		return
-// 	}
-
-// 	film, _ = h.FilmRepository.GetFilm(film.ID)
-
-// 	w.WriteHeader(http.StatusOK)
-// 	response := dto.SuccessResult{Code: http.StatusOK, Data: film}
-// 	json.NewEncoder(w).Encode(response)
-
-// }
-
 func (h *handlerFilm) UpdateFilm(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -213,31 +157,6 @@ func (h *handlerFilm) UpdateFilm(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(response)
 		return
 	}
-
-	// request := filmsdto.FilmRequest{
-	// 	Title:       r.FormValue("title"),
-	// 	ThumbNail:   r.FormValue("thumbnail"),
-	// 	Description: r.FormValue("description"),
-	// 	Year:        year,
-	// }
-
-	// validation := validator.New()
-	// err := validation.Struct(request)
-	// if err != nil {
-	// 	w.WriteHeader(http.StatusInternalServerError)
-	// 	response := dto.ErrorResult{Code: http.StatusInternalServerError, Message: err.Error()}
-	// 	json.NewEncoder(w).Encode(response)
-	// 	return
-	// }
-
-	// Get all category data by id []
-
-	// film := models.Film{
-	// 	Title:       request.Title,
-	// 	ThumbNail:   request.ThumbNail,
-	// 	Year:        request.Year,
-	// 	Description: request.Description,
-	// }
 
 	w.WriteHeader(http.StatusOK)
 	response := dto.SuccessResult{Code: http.StatusOK, Data: convertResponseFilm(data)}

@@ -75,24 +75,15 @@ func (h *handlerTransaction) CreateTransaction(w http.ResponseWriter, r *http.Re
 	userInfo := r.Context().Value("userInfo").(jwt.MapClaims)
 	userId := int(userInfo["id"].(float64))
 
-	request := new(transactionsdto.CreatTransactoinRequest)
-	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		response := dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
-		json.NewEncoder(w).Encode(response)
-		return
-	}
-
+	// convert start date & end date
 	currentTime := time.Now()
 	dueDate := time.Now().Add(time.Hour * 24 * 30)
 
-	validation := validator.New()
-	err := validation.Struct(request)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		response := dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
-		json.NewEncoder(w).Encode(response)
-		return
+	user_id, _ := strconv.Atoi(r.FormValue("user_id"))
+	request := transactionsdto.TransactionRequest{
+		StartDate: currentTime,
+		DueDate: dueDate,
+		UserID: user_id,
 	}
 
 	var TransIdIsMatch = false
@@ -105,6 +96,15 @@ func (h *handlerTransaction) CreateTransaction(w http.ResponseWriter, r *http.Re
 		}
 	}
 
+	validation := validator.New()
+	err := validation.Struct(request)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		response := dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
 	transaction := models.Transaction{
 		StartDate: currentTime,
 		DueDate:   dueDate,
@@ -112,6 +112,19 @@ func (h *handlerTransaction) CreateTransaction(w http.ResponseWriter, r *http.Re
 		Price:     50000,
 		Status:    "Pending",
 	}
+
+	// request := new(transactionsdto.CreatTransactoinRequest)
+	// if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+	// 	w.WriteHeader(http.StatusBadRequest)
+	// 	response := dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
+	// 	json.NewEncoder(w).Encode(response)
+	// 	return
+	// }
+
+
+
+
+
 
 	transactions, err := h.TransactionRepository.CreateTransaction(transaction)
 	if err != nil {

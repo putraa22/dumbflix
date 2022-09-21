@@ -13,18 +13,15 @@ import (
 
 func UploadFile(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
+		// Upload file
+		// FormFile returns the first file for the given key `myFile`
+		// it also returns the FileHeader so we can get the Filename,
+		// the Header and the size of the file
 		file, _, err := r.FormFile("thumbnail")
 
-		if err != nil && r.Method == "PATCH" {
-			ctx := context.WithValue(r.Context(), "dataFile", "false")
-			next.ServeHTTP(w, r.WithContext(ctx))
-		}
-
 		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			response := dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
-			json.NewEncoder(w).Encode(response)
+			fmt.Println(err)
+			json.NewEncoder(w).Encode("Error Retrieving the File")
 			return
 		}
 		defer file.Close()
@@ -40,35 +37,33 @@ func UploadFile(next http.HandlerFunc) http.HandlerFunc {
 		}
 
 		filetype := http.DetectContentType(buff)
-		if filetype != "image/jpeg" && filetype != "image/png" && filetype != "video/mp4" {
+		fmt.Println(filetype)
+		if filetype != "image/jpeg" && filetype != "image/png" && filetype != "image/jpg" && filetype != "video/mp4"  {
 			w.WriteHeader(http.StatusBadRequest)
-			response := dto.ErrorResult{Code: http.StatusBadRequest, Message: "The provided file format is not allowed. Please upload a JPEG or PNG image & mp4 for video"}
+			response := dto.ErrorResult{Code: http.StatusBadRequest, Message: "The provided file format is not allowed. Please upload a JPEG or PNG image"}
 			json.NewEncoder(w).Encode(response)
 			return
 		}
 
 		_, err = file.Seek(0, io.SeekStart)
 		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			response := dto.ErrorResult{Code: http.StatusInternalServerError, Message: err.Error()}
-			json.NewEncoder(w).Encode(response)
-			return
+		  w.WriteHeader(http.StatusInternalServerError)
+		  response := dto.ErrorResult{Code: http.StatusInternalServerError, Message: err.Error()}
+		  json.NewEncoder(w).Encode(response)
+		  return
 		}
-
-		// setup max-upload
-		const MAX_UPLOAD_SIZE = 100 << 20 //max-size upload
+		
+		const MAX_UPLOAD_SIZE = 100 << 20 // 10MB
 		r.ParseMultipartForm(MAX_UPLOAD_SIZE)
 		if r.ContentLength > MAX_UPLOAD_SIZE {
 			w.WriteHeader(http.StatusBadRequest)
-			response := dto.ErrorResult{Code: http.StatusBadRequest, Message: "Max upload size 1mb"}
+			response := Result{Code: http.StatusBadRequest, Message: "Max size in 1mb"}
 			json.NewEncoder(w).Encode(response)
 			return
 		}
 
-		// Create a temporary file within our temp-images directory that follows
-		// a particular naming pattern
 		fileTypeSplit := strings.Split(filetype, "/")
-		tempFile, err := ioutil.TempFile("uploads", fileTypeSplit[0]+"-*."+fileTypeSplit[1])
+		tempFile, err := ioutil.TempFile("uploads",fileTypeSplit[0]+"-*."+fileTypeSplit[1])
 		if err != nil {
 			fmt.Println(err)
 			fmt.Println("path upload error")
@@ -88,11 +83,9 @@ func UploadFile(next http.HandlerFunc) http.HandlerFunc {
 		tempFile.Write(fileBytes)
 
 		data := tempFile.Name()
-		filename := data[8:] // split uploads
-
-		// add file name to context
-		ctx := context.WithValue(r.Context(), "dataFile", filename)
+		filename := data[8:] // split uploads/
+		// add filename to ctx
+		ctx := context.WithValue(r.Context(), "image", filename)
 		next.ServeHTTP(w, r.WithContext(ctx))
-
 	})
 }
