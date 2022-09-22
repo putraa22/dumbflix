@@ -64,7 +64,7 @@ function ListTransaction() {
           <tbody>
             {transaction?.map((item, index) => (
               <tr key={index}>
-                <td>{item.user.id}</td>
+                <td>{index + 1}</td>
                 <td>{item.user.fullname}</td>
                 {/* <td>{item.attache}</td> */}
                 <td>{Duration(item.dueDate, item.startDate)}</td>

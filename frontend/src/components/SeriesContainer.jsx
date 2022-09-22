@@ -1,9 +1,6 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import SeriesList from "./SeriesList";
-// import {useState} from 'react';
-// import youSeries from '../Images/you.png'
-// import data from '../dataDummy/DataFakeSeries.jsx'
 import { useQuery } from "react-query";
 import { API } from "../config/api";
 

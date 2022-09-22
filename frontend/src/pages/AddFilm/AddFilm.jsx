@@ -14,6 +14,7 @@ function AddFilm() {
   const [form, setForm] = useState({
     title: "",
     thumbnail: "",
+    linkFilm: "",
     year: "",
     category_id: "",
     description: "",
@@ -70,6 +71,7 @@ function AddFilm() {
       const formData = new FormData();
       formData.set("title", form.title);
       formData.set("thumbnail", form.thumbnail[0], form.thumbnail[0].name);
+      formData.set("linkFilm", form.linkFilm);
       formData.set("year", form.year);
       formData.set("category_id", form.category_id);
       formData.set("description", form.description);
@@ -97,7 +99,7 @@ function AddFilm() {
         <Form style={{ marginTop: "30px" }} onSubmit={(e) => handleSubmit.mutate(e)}>
           <Row>
             <Col xs={10}>
-              <Form.Control placeholder="Title" name="title" style={{ backgroundColor: "gray", color: "white" }} onChange={handleChange} />
+              <Form.Control placeholder="Title" name="title" style={{ backgroundColor: "gray", color: "white", border: "none" }} onChange={handleChange} />
             </Col>
             <Col>
               <Form.Group className="mb-3">
@@ -109,8 +111,11 @@ function AddFilm() {
               </Form.Group>
             </Col>
           </Row>
-          <Form.Control placeholder="Year" name="year" style={{ backgroundColor: "gray", color: "white" }} onChange={handleChange} />
-          <Form.Select name="category_id" style={{ marginTop: "18px", backgroundColor: "gray", color: "white" }} onChange={handleChange}>
+          <div className="col-12 d-flex justify-content-center text-white ">
+            <Form.Control type="text" placeholder="Link Film" name="linkFilm" onChange={handleChange} className=" text-white mb-4 border-0" style={{ backgroundColor: "gray" }} />
+          </div>
+          <Form.Control className="border-0" placeholder="Year" name="year" style={{ backgroundColor: "gray", color: "white" }} onChange={handleChange} />
+          <Form.Select name="category_id" style={{ marginTop: "18px", backgroundColor: "gray", color: "white", border: "none" }} onChange={handleChange}>
             <option>Category</option>
             {categories.map((item) => (
               <>
@@ -119,27 +124,10 @@ function AddFilm() {
             ))}
           </Form.Select>
           <FloatingLabel controlId="floatingTextarea2" label="Description" style={{ marginTop: "18px" }}>
-            <Form.Control as="textarea" name="description" placeholder="Description" style={{ height: "100px", backgroundColor: "gray", color: "white" }} onChange={handleChange} />
+            <Form.Control as="textarea" name="description" placeholder="Description" style={{ height: "100px", backgroundColor: "gray", color: "white", border: "none" }} onChange={handleChange} />
           </FloatingLabel>
-
-          {/* <Row style={{marginTop: '50px'}}>
-                <Col xs={10}>
-                  <Form.Control placeholder="Title Episode" style={{backgroundColor: 'gray', color: 'white'}}/>
-                </Col>
-                <Col>
-                  <Form.Group controlId="formFile" className="mb-3">
-                    <Form.Label style={{backgroundColor: 'gray', padding: '5px', borderRadius: '5px', color: 'white'}} htmlFor='thumbnail'>Attach Thumbnail<AttachFile/></Form.Label>
-                    <Form.Control style={{display: 'none'}}  id='thumbnail' type="file" />
-                  </Form.Group>
-                </Col>
-              </Row>
-              <Form.Control placeholder="Link Film" style={{backgroundColor: 'gray', color: 'white'}} />
-              <Form.Group controlId="formFile" className="mb-3" style={{marginTop: '18px'}}>
-                <Form.Label style={{backgroundColor: 'gray', padding: '5px', borderRadius: '5px', color: 'white', width: '1115px'}} htmlFor='label'><Add style={{marginLeft: '500px'}}/></Form.Label>
-                <Form.Control style={{display: 'none'}}  id='label' type="file" />
-              </Form.Group> */}
           <div style={{ float: "right" }}>
-            <Button variant="danger" type="submit">
+            <Button variant="danger" type="submit" style={{ boder: "none", marginTop: "2rem", width: "100%" }}>
               Save
             </Button>
           </div>

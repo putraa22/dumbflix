@@ -1,90 +1,90 @@
-.app__payment {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  //   align-items: center;
+// .app__payment {
+//   height: 100vh;
+//   display: flex;
+//   justify-content: center;
+//   //   align-items: center;
 
-  .app__wrapper-payment {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: var(--color-white);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+//   .app__wrapper-payment {
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     color: var(--color-white);
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     flex-direction: column;
 
-    h1 {
-      font-weight: 800;
-      font-family: var(--font-base);
-      margin-bottom: 3rem;
-    }
+//     h1 {
+//       font-weight: 800;
+//       font-family: var(--font-base);
+//       margin-bottom: 3rem;
+//     }
 
-    .app__payment-content {
-      text-align: center;
+//     .app__payment-content {
+//       text-align: center;
 
-      .app__payment-desc {
-        font-family: var(--font-base);
-        font-weight: 400;
+//       .app__payment-desc {
+//         font-family: var(--font-base);
+//         font-weight: 400;
 
-        span {
-          font-weight: 700;
-          font-family: var(--font-base);
-          color: var(--color-red);
-          padding-right: 3px;
-        }
-      }
+//         span {
+//           font-weight: 700;
+//           font-family: var(--font-base);
+//           color: var(--color-red);
+//           padding-right: 3px;
+//         }
+//       }
 
-      .app__payment-form {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        text-align: center;
-        align-items: center;
+//       .app__payment-form {
+//         display: flex;
+//         flex-direction: column;
+//         justify-content: center;
+//         text-align: center;
+//         align-items: center;
 
-        button {
-          width: 50%;
-          padding: 5px 0;
-          border: none;
-          border-radius: 10px;
-          margin-top: 5rem;
-          background-color: var(--color-red);
-          color: var(--color-white);
-          font-family: var(--font-base);
-          font-size: 18px;
-          font-weight: 600;
-        }
+//         button {
+//           width: 50%;
+//           padding: 5px 0;
+//           border: none;
+//           border-radius: 10px;
+//           margin-top: 5rem;
+//           background-color: var(--color-red);
+//           color: var(--color-white);
+//           font-family: var(--font-base);
+//           font-size: 18px;
+//           font-weight: 600;
+//         }
 
-        input {
-          width: 50%;
-          margin: 10px 0rem;
-          padding: 10px 0;
-          border: none;
-          outline: none;
-          border-radius: 5px;
-        }
-        .input-number {
-          background: var(--color-gray);
-          color: aliceblue;
-        }
+//         input {
+//           width: 50%;
+//           margin: 10px 0rem;
+//           padding: 10px 0;
+//           border: none;
+//           outline: none;
+//           border-radius: 5px;
+//         }
+//         .input-number {
+//           background: var(--color-gray);
+//           color: aliceblue;
+//         }
 
-        label{
-          background-color: var(--color-white);
-          width: 50%;
-          font-family: var(--font-base);
-          font-weight: 500;
-          font-size: 18px;
-          border-radius: 5px;
-          color: var(--color-red);
-          padding: 10px 0;
+//         label{
+//           background-color: var(--color-white);
+//           width: 50%;
+//           font-family: var(--font-base);
+//           font-weight: 500;
+//           font-size: 18px;
+//           border-radius: 5px;
+//           color: var(--color-red);
+//           padding: 10px 0;
 
-        }
-        .input-file {
-          background-color: var(--color-white);
-          color: var(--color-red);
-          display: none;
-        }
-      }
-    }
-  }
-}
+//         }
+//         .input-file {
+//           background-color: var(--color-white);
+//           color: var(--color-red);
+//           display: none;
+//         }
+//       }
+//     }
+//   }
+// }

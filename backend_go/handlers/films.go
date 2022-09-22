@@ -79,6 +79,7 @@ func (h *handlerFilm) CreateFilm(w http.ResponseWriter, r *http.Request) {
 	request := filmsdto.CreateFilmRequest{
 		Title:       r.FormValue("title"),
 		ThumbNail:   filename,
+		LinkFilm:   	 r.FormValue("linkFilm"),
 		Year:        r.FormValue("year"),
 		CategoryID:  category_id,
 		Description: r.FormValue("description"),
@@ -96,6 +97,7 @@ func (h *handlerFilm) CreateFilm(w http.ResponseWriter, r *http.Request) {
 	film := models.Film{
 		Title:       request.Title,
 		ThumbNail:   filename,
+		LinkFilm: request.LinkFilm,
 		Year:        request.Year,
 		CategoryID:  category_id,
 		Category:    models.CategoryResponse{},
@@ -146,6 +148,10 @@ func (h *handlerFilm) UpdateFilm(w http.ResponseWriter, r *http.Request) {
 		film.ThumbNail = request.ThumbNail
 	}
 
+	if request.LinkFilm != "" {
+		film.LinkFilm = request.LinkFilm
+	}
+
 	if request.Description != "" {
 		film.Description = request.Description
 	}
@@ -159,7 +165,7 @@ func (h *handlerFilm) UpdateFilm(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	response := dto.SuccessResult{Code: http.StatusOK, Data: convertResponseFilm(data)}
+	response := dto.SuccessResult{Code: http.StatusOK, Data: data}
 	json.NewEncoder(w).Encode(response)
 
 }
@@ -188,7 +194,7 @@ func (h *handlerFilm) DeleteFilm(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	response := dto.SuccessResult{Code: http.StatusOK, Data: deleteFilm}
+	response := dto.SuccessResult{Code: http.StatusOK, Data: convertResponseDelFilm(deleteFilm)}
 	json.NewEncoder(w).Encode(response)
 }
 
@@ -197,8 +203,17 @@ func convertResponseFilm(f models.Film) models.FilmResponse {
 		ID:          f.ID,
 		Title:       f.Title,
 		ThumbNail:   f.ThumbNail,
+		LinkFilm: f.LinkFilm,
 		Year:        f.Year,
 		Category:    f.Category,
 		Description: f.Description,
+	}
+}
+
+func convertResponseDelFilm(f models.Film) models.FilmResponse {
+	return models.FilmResponse{
+		ID: f.ID,
+		Title: f.Title,
+		Year: f.Year,
 	}
 }

@@ -6,9 +6,13 @@ import (
 	"dumbflix/models"
 	"dumbflix/repositories"
 	"encoding/json"
+	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"time"
+
+	"gopkg.in/gomail.v2"
 
 	"math/rand"
 	"strconv"
@@ -112,20 +116,7 @@ func (h *handlerTransaction) CreateTransaction(w http.ResponseWriter, r *http.Re
 		Price:     50000,
 		Status:    "Pending",
 	}
-
-	// request := new(transactionsdto.CreatTransactoinRequest)
-	// if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-	// 	w.WriteHeader(http.StatusBadRequest)
-	// 	response := dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
-	// 	json.NewEncoder(w).Encode(response)
-	// 	return
-	// }
-
-
-
-
-
-
+	
 	transactions, err := h.TransactionRepository.CreateTransaction(transaction)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -187,23 +178,84 @@ func (h *handlerTransaction) Notification(w http.ResponseWriter, r *http.Request
 	fraudStatus := notificationPayload["fraud_status"].(string)
 	orderId := notificationPayload["order_id"].(string)
 
+	transaction, _ := h.TransactionRepository.GetOneTransaction(orderId)
+
 	if transactionStatus == "capture" {
 		if fraudStatus == "challenge" {
 			h.TransactionRepository.UpdateTransaction("pending", orderId)
 		} else if fraudStatus == "accept" {
+			sendMail("success", transaction)
 			h.TransactionRepository.UpdateTransaction("success", orderId)
 		}
 	} else if transactionStatus == "settlement" {
+		sendMail("success", transaction)
 		h.TransactionRepository.UpdateTransaction("success", orderId)
 	} else if transactionStatus == "deny" {
+		sendMail("failed", transaction)
 		h.TransactionRepository.UpdateTransaction("failed", orderId)
 	} else if transactionStatus == "cancel" || transactionStatus == "expired" {
+		sendMail("failed", transaction)
 		h.TransactionRepository.UpdateTransaction("failed", orderId)
 	} else if transactionStatus == "pending" {
 		h.TransactionRepository.UpdateTransaction("pending", orderId)
 	}
 
 	w.WriteHeader(http.StatusOK)
+}
+
+func sendMail(status string, transaction models.Transaction) {
+
+	if status != transaction.Status && (status == "success") {
+		var CONFIG_SMTP_HOST = "smtp.gmail.com"
+	  var CONFIG_SMTP_PORT = 587
+	  var CONFIG_SENDER_NAME = "hermansyahputra0418@gmail.com"
+	  var CONFIG_AUTH_EMAIL = os.Getenv("EMAIL_SYSTEM")
+	  var CONFIG_AUTH_PASSWORD = os.Getenv("PASSWORD_SYSTEM")
+  
+	  var expire = transaction.DueDate
+	  var price = strconv.Itoa(transaction.Price)
+
+
+	  mailer := gomail.NewMessage()
+	  mailer.SetHeader("From", CONFIG_SENDER_NAME)
+	  mailer.SetHeader("To", transaction.User.Email)
+	  mailer.SetHeader("Subject", "Transaction Status")
+	  mailer.SetBody("text/html", fmt.Sprintf(`<!DOCTYPE html>
+	  <html lang="en">
+		<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<style>
+		  h1 {
+		  color: brown;
+		  }
+		</style>
+		</head>
+		<body>
+		<h2>Product payment :</h2>
+		<ul style="list-style-type:none;">
+		  <li>Expired in : %s</li>
+		  <li>Total payment: Rp.%s</li>
+		  <li>Status : <b>%s</b></li>
+		</ul>
+		</body>
+	  </html>`, expire, price, status))
+
+	  dialer := gomail.NewDialer(
+		CONFIG_SMTP_HOST,
+		CONFIG_SMTP_PORT,
+		CONFIG_AUTH_EMAIL,
+		CONFIG_AUTH_PASSWORD,
+	  )
+
+	  err := dialer.DialAndSend(mailer)
+	  if err != nil {
+		log.Fatal(err.Error())
+	  }
+	  log.Println("Mail sent! to " + transaction.User.Email)
+	}
 }
 
 func (h *handlerTransaction) DeleteTransaction(w http.ResponseWriter, r *http.Request) {

@@ -28,10 +28,10 @@ type UserResponse struct {
 	Email     string `json:"email" form:"email" validate:"required"`
 	Password  string `json:"password" form:"password" validate:"required"`
 	Gender    string `json:"gender" form:"gender" validate:"required"`
-	Phone     int    `json:"phone" form:"phone"`
-	Address   string `json:"address" form:"address"`
-	Subscribe string `json:"subscribe" form:"subscribe"`
-	Status    string `json:"status" form:"status"`
+	Phone     string    `json:"phone" gorm:"type: varchar(50)"`
+	Address   string    `json:"address" gorm:"type:varchar(225)"`
+	Status    bool      `json:"status" gorm:"type:varchar(50)"`
+	
 }
 
 func (UserResponse) TableName() string {

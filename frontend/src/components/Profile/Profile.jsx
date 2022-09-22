@@ -32,7 +32,7 @@ const Profile = () => {
           <div className="profile">
             <img src={images.status} alt="mail-img" />
             <p className="p-text">
-              {state.user.status}
+              {state.user.status ? "Active" : "Not Active Please Subscribe"}
               <span>Status</span>
             </p>
           </div>

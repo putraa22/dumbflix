@@ -3,14 +3,13 @@ import { Home, DetailSeries, DetailMovies, Movies, Series, Pay } from "./pages";
 import ListFilm from "../src/pages/ListFilm/ListFilm";
 import AddFilm from "../src/pages/AddFilm/AddFilm";
 import { useContext, useEffect } from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { Navbar, Profile } from "../src/components";
 import DetailFilm from "./pages/DetailFilm/DetailFilmAdmin";
 import ListTransaction from "../src/pages/ListTransaction/ListTransaction";
 import { UserContext } from "./context/userContext";
 import { API, setAuthToken } from "./config/api";
 import { IsAdminRoute, IsLoginRoute } from "./Privat";
-import { ResetTvOutlined } from "@mui/icons-material";
 
 // if(localStorage.token) {
 //   setAuthToken(localStorage.token);
@@ -72,7 +71,7 @@ function App() {
         <Route path="/movies" element={<Movies />} />
         <Route path="/tv-show" element={<Series />} />
         <Route path="/detail-series" element={<DetailSeries />} />
-        <Route path="/detail-movies" element={<DetailMovies />} />
+        <Route path="/detail-movies/:id" element={<DetailMovies />} />
         <Route element={<IsLoginRoute />} path={"/"}>
           <Route path="/pay" element={<Pay />} />
           <Route path="/profile" element={<Profile />} />
