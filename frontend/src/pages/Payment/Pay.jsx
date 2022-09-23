@@ -1,5 +1,4 @@
 import React, { useContext, useEffect } from "react";
-import "./Pay.scss";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../context/userContext";
 import { useMutation } from "react-query";

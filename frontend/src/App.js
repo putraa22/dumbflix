@@ -1,19 +1,14 @@
 import "./App.scss";
-import { Home, DetailSeries, DetailMovies, Movies, Series, Pay } from "./pages";
+import { Home, DetailMovies, Movies, Series, Pay } from "./pages";
 import ListFilm from "../src/pages/ListFilm/ListFilm";
 import AddFilm from "../src/pages/AddFilm/AddFilm";
 import { useContext, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import { Navbar, Profile } from "../src/components";
-import DetailFilm from "./pages/DetailFilm/DetailFilmAdmin";
 import ListTransaction from "../src/pages/ListTransaction/ListTransaction";
 import { UserContext } from "./context/userContext";
 import { API, setAuthToken } from "./config/api";
 import { IsAdminRoute, IsLoginRoute } from "./Privat";
-
-// if(localStorage.token) {
-//   setAuthToken(localStorage.token);
-// }
 
 function App() {
   const [state, dispatch] = useContext(UserContext);
@@ -70,7 +65,6 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/movies" element={<Movies />} />
         <Route path="/tv-show" element={<Series />} />
-        <Route path="/detail-series" element={<DetailSeries />} />
         <Route path="/detail-movies/:id" element={<DetailMovies />} />
         <Route element={<IsLoginRoute />} path={"/"}>
           <Route path="/pay" element={<Pay />} />
@@ -78,7 +72,6 @@ function App() {
           <Route element={<IsAdminRoute />} path={"/"}>
             <Route path="/list-film" element={<ListFilm />} />
             <Route path="/add-film" element={<AddFilm />} />
-            <Route path="/detail-film" element={<DetailFilm />} />
             <Route path="/list-transaction" element={<ListTransaction />} />
           </Route>
         </Route>
