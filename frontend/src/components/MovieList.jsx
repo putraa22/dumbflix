@@ -8,7 +8,7 @@ function MovieList({ id, movieImg, title, year }) {
       <Card style={{ backgroundColor: "#1f1f1f" }} className="rounded border-0 mt-5 text-white">
         <Card.Img variant="top" src={movieImg} />
         <Card.Body>
-          <Card.Title>{title}</Card.Title>
+          <Card.Title style={{ fontSize: "18px" }}>{title}</Card.Title>
           <p className="text-muted">{year}</p>
         </Card.Body>
       </Card>

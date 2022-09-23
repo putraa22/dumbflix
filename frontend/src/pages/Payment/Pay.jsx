@@ -77,21 +77,21 @@ const Pay = () => {
     {
       title: "Free",
       price: "0",
-      description: ["Trial 14 Days"],
+      description: ["Malu kalo cuman modal gratisan!", "Free Trial 14 Days"],
       buttonText: "Sign up for free",
       buttonVariant: "outlined",
     },
     {
       title: "Basic Member",
       subheader: "Most popular",
-      price: "15",
+      price: "50.000",
       description: ["access only to some movies & series.", "Help center access", "Priority email support"],
-      buttonText: "Get started",
-      buttonVariant: "contained",
+      buttonTextBuy: "Get started",
+      buttonVariantBuy: "contained",
     },
     {
       title: "Premium Member",
-      price: "30",
+      price: "120.000",
       description: ["All Access Movies & Series", "Help center access", "Phone & email support"],
       buttonText: "Contact us",
       buttonVariant: "outlined",
@@ -131,7 +131,14 @@ const Pay = () => {
           {tiers.map((tier) => (
             // Enterprise card is full width at sm breakpoint
             <Grid item key={tier.title} xs={12} sm={tier.title === "Premium Member" ? 12 : 6} md={4}>
-              <Card>
+              <Card
+                sx={{
+                  backgroundColor: "#1f1f1f",
+                  "&:hover": {
+                    boxShadow: "0px 0px 9px 0px #969696",
+                  },
+                }}
+              >
                 <CardHeader
                   title={tier.title}
                   subheader={tier.subheader}
@@ -139,12 +146,20 @@ const Pay = () => {
                   action={tier.title === "Basic Member" ? <StarIcon /> : null}
                   subheaderTypographyProps={{
                     align: "center",
+                    color: "#fff",
                   }}
                   sx={{
-                    backgroundColor: (theme) => (theme.palette.mode === "light" ? theme.palette.grey[200] : theme.palette.grey[700]),
+                    // backgroundColor: (theme) => (theme.palette.mode === "light" ? theme.palette.grey[200] : theme.palette.grey[600]),
+                    backgroundColor: "#e50914",
+                    color: "#fff",
                   }}
                 />
-                <CardContent>
+                <CardContent
+                  sx={{
+                    backgroundColor: "#1f1f1f",
+                    color: "#929292",
+                  }}
+                >
                   <Box
                     sx={{
                       display: "flex",
@@ -153,10 +168,10 @@ const Pay = () => {
                       mb: 2,
                     }}
                   >
-                    <Typography component="h2" variant="h3" color="text.primary">
-                      ${tier.price}
+                    <Typography component="h5" variant="h5" color="#929292">
+                      IDR {tier.price}
                     </Typography>
-                    <Typography variant="h6" color="text.secondary">
+                    <Typography variant="h6" color="#929292">
                       /mo
                     </Typography>
                   </Box>
@@ -169,7 +184,12 @@ const Pay = () => {
                   </ul>
                 </CardContent>
                 <CardActions>
-                  <Button fullWidth variant={tier.buttonVariant} type="submit" onClick={(e) => handleBuy.mutate(e)}>
+                  <Button fullWidth variant={tier.buttonVariantBuy} type="submit" onClick={(e) => handleBuy.mutate(e)}>
+                    {tier.buttonTextBuy}
+                  </Button>
+                </CardActions>
+                <CardActions>
+                  <Button fullWidth variant={tier.buttonVariant}>
                     {tier.buttonText}
                   </Button>
                 </CardActions>
@@ -179,29 +199,6 @@ const Pay = () => {
         </Grid>
       </Box>
     </Container>
-    // <div className="app__payment">
-    //   <div className="app__wrapper-payment">
-    //     <h1>Premium</h1>
-    //     <div className="app__payment-content">
-    //       <p className="app__payment-desc">
-    //         Bayar sekarang dan nikmati streaming film-film yang kekinian dari <span>DUMBFLIX</span> <br />
-    //         <span>DUMBFLIX</span> : 0981312323
-    //       </p>
-    //       <div className="app__payment-form">
-    //         <input className="input-number" type="number" placeholder="Input your account number" />
-    //         {/* <div className="input-file"> */}
-    //         <label htmlFor="label">
-    //           Attache proof of transfer <AttachFile />{" "}
-    //         </label>
-    //         <input id="label" className="input-file" type="file" placeholder="Attach proof of transfer" />
-    //         {/* </div> */}
-    //         <button type="submit" onClick={(e) => handleBuy.mutate(e)}>
-    //           Kirim
-    //         </button>
-    //       </div>
-    //     </div>
-    //   </div>
-    // </div>
   );
 };
 
